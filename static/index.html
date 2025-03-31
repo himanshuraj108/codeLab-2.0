@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Debugger Tool</title>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+        <header>
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <span>CodeLab Debugger</span>
+            </div>
+            <div class="app-controls">
+                <a href="#" id="showFeaturesLink">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Features</span>
+                </a>
+            </div>
+        </header>
+    
+        <div class="marquee-container">
+            <div class="marquee">
+                Questions will be dynamically generated based on your code to help you learn and improve your programming skills
+            </div>
+        </div>
+    
+        <div class="container" id="main-container">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-laptop-code"></i>
+                        Code Editor
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="code-editor">
+                        <div class="textarea-container">
+                            <textarea id="code" placeholder="Enter your code here..." oninput="autoResize(this)" spellcheck="false"></textarea>
+                            <div class="paste-icon" id="pasteCodeBtn" onclick="pasteText('code')">
+                                <i class="fas fa-paste"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <select id="language">
+                            <option value="python">Python</option>
+                            <!-- <option value="cpp">C++</option> -->
+                            <option value="c">C</option>
+                        </select>
+                        <input type="text" id="user-input" placeholder="Input (if needed)" />
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="runCodeBtn" onclick="debugCode()">
+                            <i class="fas fa-play"></i>
+                            <span id="buttonText">Run Code</span>
+                        </button>
+                        <button id="autoCorrectBtn" style="display: none" onclick="autoCorrectCode()">
+                            <i class="fas fa-magic"></i>
+                            <span id="autoCorrectText">Fix Code</span>
+                        </button>
+                    </div>
+                    
+                    <div class="output-section">
+                        <strong>Output:</strong>
+                        <div id="output">Your output will be displayed here</div>
+                    </div>
+                    
+                    <div class="output-section">
+                        <strong>Corrected Code:</strong>
+                        <div class="textarea-container">
+                            <pre id="corrected-code"></pre>
+                            <div class="copy-icon" id="copyCorrectedCodeBtn" onclick="copyText('corrected-code')" style="display: none">
+                                <i class="fas fa-copy"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-project-diagram"></i>
+                        Code Visualization
+                    </div>
+                    <div class="toggle-container">
+                        <span>Enable</span>
+                        <div class="toggle" id="visualizer-toggle"></div>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div id="visualization-output"></div>
+                </div>
+                
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <i class="fas fa-question-circle"></i>
+                        Generated Questions
+                    </div>
+                    <div class="toggle-container">
+                        <span>Enable</span>
+                        <div class="toggle" id="questions-toggle"></div>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="spinner" id="spinner" style="display: none"></div>
+                    <ul id="questions-list"></ul>
+                </div>
+            </div>
+        </div>
+    
+        <div id="watch-history-icon" onclick="toggleWatchHistory()">
+            <i class="fas fa-history"></i>
+        </div>
+    
+        <div id="watch-history">
+            <div class="history-header">
+                <span class="history-title">Code History</span>
+                <button onclick="clearHistory()" style="background: none; border: none; color: white; cursor: pointer;">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+            <div class="history-body">
+                <ul id="watch-history-list"></ul>
+            </div>
+        </div>
+    
+        <div class="popup" id="features-popup">
+            <div class="popup-content">
+                <div class="popup-header">
+                    <div class="popup-title">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>CodeLab Features</span>
+                    </div>
+                    <button class="popup-close" id="closePopupBtn">&times;</button>
+                </div>
+                
+                <div class="features-container">
+                    <div class="feature-category">
+                        <h3 class="category-title">Code Execution & Debugging</h3>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-code"></i></div>
+                            <div class="feature-content">
+                                <h4>Multi-Language Support</h4>
+                                <p>Debug and run code in Python, C++, C, and Java with real-time compilation and execution on our secure backend.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-bug"></i></div>
+                            <div class="feature-content">
+                                <h4>Intelligent Debugging</h4>
+                                <p>Detailed error highlighting and contextual suggestions help identify and fix issues in your code quickly.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-magic"></i></div>
+                            <div class="feature-content">
+                                <h4>AI Code Correction</h4>
+                                <p>One-click auto-fix for syntax errors and code improvements powered by the Mistral AI large language model.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-category">
+                        <h3 class="category-title">AI-Powered Assistance</h3>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                            <div class="feature-content">
+                                <h4>Interactive AI Chatbot</h4>
+                                <p>Get personalized help, explanations, and code suggestions from our AI assistant for programming concepts.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                            <div class="feature-content">
+                                <h4>Smart Code Analysis</h4>
+                                <p>AI automatically analyzes your code to detect potential bugs, performance issues, and security vulnerabilities.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-question-circle"></i></div>
+                            <div class="feature-content">
+                                <h4>AI-Generated Questions</h4>
+                                <p>Practice with dynamically generated questions based on your code to deepen understanding and improve skills.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-category">
+                        <h3 class="category-title">Learning & Visualization</h3>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-project-diagram"></i></div>
+                            <div class="feature-content">
+                                <h4>Code Visualization</h4>
+                                <p>Watch your code execute step-by-step with visual line highlighting and execution flow for better comprehension.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-map-signs"></i></div>
+                            <div class="feature-content">
+                                <h4>Smart Navigation</h4>
+                                <p>Navigate complex code with intelligent structure analysis that identifies functions, classes, and key elements.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-lightbulb"></i></div>
+                            <div class="feature-content">
+                                <h4>Contextual Insights</h4>
+                                <p>Hover over code elements to get explanations, documentation references, and usage examples as you work.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-category">
+                        <h3 class="category-title">Productivity Tools</h3>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-history"></i></div>
+                            <div class="feature-content">
+                                <h4>Code History</h4>
+                                <p>Track your previous code runs and restore them with a single click, ensuring you never lose your work.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-keyboard"></i></div>
+                            <div class="feature-content">
+                                <h4>Productivity Shortcuts</h4>
+                                <p>Boost efficiency with keyboard shortcuts, code completion, and quick access to frequently used functions.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div class="feature-content">
+                                <h4>Code Sharing & Export</h4>
+                                <p>Share your code and results with others or export to various formats for your projects and assignments.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-category">
+                        <h3 class="category-title">User Experience</h3>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-palette"></i></div>
+                            <div class="feature-content">
+                                <h4>Modern Interface</h4>
+                                <p>Sleek, responsive design with intuitive controls, customizable panels, and dark mode for comfortable coding.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-universal-access"></i></div>
+                            <div class="feature-content">
+                                <h4>Accessibility Features</h4>
+                                <p>Designed with accessibility in mind, supporting keyboard navigation, screen readers, and adjustable font sizes.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                            <div class="feature-content">
+                                <h4>Responsive Design</h4>
+                                <p>Use CodeLab on any device with a fully responsive layout that adapts to desktops, tablets, and smartphones.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="popup-footer">
+                    <div class="popup-badges">
+                        <span class="popup-badge">Version 2.0</span>
+                        <span class="popup-badge">AI-Powered</span>
+                        <span class="popup-badge">Open Source</span>
+                        <span class="popup-badge">Cloud-Connected</span>
+                    </div>
+                    <button class="btn-close" id="closeFeatureBtn">Got it!</button>
+                </div>
+            </div>
+        </div>
+    
+        <div class="confirmation" id="confirmation">
+            <div class="confirmation-content">
+                <div class="confirmation-message">Your code contains errors. Would you like to see the corrected version?</div>
+                <div class="confirmation-buttons">
+                    <button class="btn-confirm btn-yes" onclick="getCorrectCode()">Yes, fix it</button>
+                    <button class="btn-confirm btn-no" onclick="dismissConfirmation()">No, thanks</button>
+                </div>
+            </div>
+        </div>
+    
+        <div class="confirmation" id="history-confirmation">
+            <div class="confirmation-content">
+                <div class="confirmation-message">Do you want to use this code from your history?</div>
+                <div class="confirmation-buttons">
+                    <button class="btn-confirm btn-yes" id="history-confirm-yes">Yes, use it</button>
+                    <button class="btn-confirm btn-no" id="history-confirm-no">No, cancel</button>
+                </div>
+            </div>
+        </div>
+    
+        <div class="confirmation" id="clear-history-confirmation">
+            <div class="confirmation-content">
+                <div class="confirmation-message">Are you sure you want to clear your entire code history?</div>
+                <div class="confirmation-buttons">
+                    <button class="btn-confirm btn-yes" id="clear-history-yes">Yes, clear it</button>
+                    <button class="btn-confirm btn-no" id="clear-history-no">No, keep it</button>
+                </div>
+            </div>
+        </div>
+        <div id="chat-bot-icon" onclick="toggleChatBot()">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+
+        <div id="chat-bot-container">
+            <div class="chat-header">
+                <span class="chat-title">CodeLab Assistant</span>
+                <div class="chat-controls">
+                    <button class="chat-control-btn" id="minimizeChatBtn"><i class="fas fa-minus"></i></button>
+                    <button class="chat-control-btn" id="closeChatBtn"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+            <div class="chat-body">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="chat-message bot">
+                        <div class="chat-bubble">Hello! I'm your CodeLab Assistant. How can I help you with your code today?</div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <textarea id="chat-input" placeholder="Ask me anything about coding..."></textarea>
+                    <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+            <div class="chat-resizer"></div>
+        </div>
+        <!-- Updated footer with proper z-index handling -->
+<footer class="app-footer">
+    <div class="danger-line"></div>
+    
+    <div class="footer-content">
+        <div class="footer-title">
+            <span class="danger-text">PROJECT TEAM</span>
+            <i class="fas fa-code-branch"></i>
+        </div>
+        
+        <div class="team-members">
+            <div class="team-member danger-card">
+                <div class="danger-corner top-left"></div>
+                <div class="danger-corner top-right"></div>
+                <div class="danger-corner bottom-left"></div>
+                <div class="danger-corner bottom-right"></div>
+                <div class="member-avatar">
+                    <i class="fas fa-terminal"></i>
+                </div>
+                <div class="member-info">
+                    <span class="member-name">Himanshu Raj</span>
+                    <span class="member-id danger-blink">[12314450]</span>
+                    <span class="member-role">LEAD DEVELOPER</span>
+                </div>
+                <div class="tooltip-wrapper">
+                    <div class="member-tooltip">
+                        <div class="tooltip-title">Implementation</div>
+                        <div class="tooltip-details">
+                            <div class="detail-item">
+                                <i class="fas fa-server"></i>
+                                <span>Backend Development</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-desktop"></i>
+                                <span>Frontend UI/UX Design</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-code"></i>
+                                <span>API Integration</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-bug"></i>
+                                <span>Debugging & Testing</span>
+                            </div>
+                        </div>
+                        <div class="tooltip-tech">
+                            <span class="tech-tag">Flask</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">HTML/CSS</span>
+                            <span class="tech-tag">Mistral API</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member danger-card">
+                <div class="danger-corner top-left"></div>
+                <div class="danger-corner top-right"></div>
+                <div class="danger-corner bottom-left"></div>
+                <div class="danger-corner bottom-right"></div>
+                <div class="member-avatar">
+                    <i class="fas fa-file-code"></i>
+                </div>
+                <div class="member-info">
+                    <span class="member-name">Harshit Dhiman</span>
+                    <span class="member-id danger-blink">[12315075]</span>
+                    <span class="member-role">DOCUMENTATION</span>
+                </div>
+                <div class="tooltip-wrapper">
+                    <div class="member-tooltip">
+                        <div class="tooltip-title">Documentation</div>
+                        <div class="tooltip-details">
+                            <div class="detail-item">
+                                <i class="fas fa-book"></i>
+                                <span>Project Documentation</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>Requirements Analysis</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-tasks"></i>
+                                <span>Feature Planning</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-edit"></i>
+                                <span>Content Writing</span>
+                            </div>
+                        </div>
+                        <div class="tooltip-tech">
+                            <span class="tech-tag">Documentation</span>
+                            <span class="tech-tag">Research</span>
+                            <span class="tech-tag">Planning</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member danger-card">
+                <div class="danger-corner top-left"></div>
+                <div class="danger-corner top-right"></div>
+                <div class="danger-corner bottom-left"></div>
+                <div class="danger-corner bottom-right"></div>
+                <div class="member-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="member-info">
+                    <span class="member-name">Md Subhan</span>
+                    <span class="member-id danger-blink">[12314341]</span>
+                    <span class="member-role">QUALITY ASSURANCE</span>
+                </div>
+                <div class="tooltip-wrapper">
+                    <div class="member-tooltip">
+                        <div class="tooltip-title">Support</div>
+                        <div class="tooltip-details">
+                            <div class="detail-item">
+                                <i class="fas fa-vial"></i>
+                                <span>Quality Assurance</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-search"></i>
+                                <span>User Testing</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-question-circle"></i>
+                                <span>User Feedback</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-hand-holding-heart"></i>
+                                <span>Support</span>
+                            </div>
+                        </div>
+                        <div class="tooltip-tech">
+                            <span class="tech-tag">Testing</span>
+                            <span class="tech-tag">QA</span>
+                            <span class="tech-tag">User Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-copyright">
+            <span class="danger-small">CodeLab Debugger Project</span>
+            <div class="system-stamp">© 2025 All Rights Reserved</div>
+        </div>
+    </div>
+    
+    <div class="danger-scanline"></div>
+</footer>
+        <script src="script.js"></script>
+</body>
+</html>
