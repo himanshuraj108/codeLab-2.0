@@ -129,7 +129,7 @@ def execute_code(code, language, user_input=""):
 
 def generate_questions(code):
     try:
-        MISTRAL_API_KEY = "sAtFQbj6YlnK1TXe7H5kJdPOSfnDdIBo" #replace
+        MISTRAL_API_KEY = "" #replace your api
         url = "https://api.mistral.ai/v1/chat/completions"
         headers = {
             "Authorization": f"Bearer {MISTRAL_API_KEY}",
@@ -157,7 +157,7 @@ def extract_java_class_name(code):
 
 def correct_code_using_mistral(code):
     try:
-        MISTRAL_API_KEY = "sAtFQbj6YlnK1TXe7H5kJdPOSfnDdIBo" #replace
+        MISTRAL_API_KEY = "" #replace your api
         url = "https://api.mistral.ai/v1/chat/completions"
         headers = {
             "Authorization": f"Bearer {MISTRAL_API_KEY}",
