@@ -1198,7 +1198,7 @@ function hideTypingIndicator() {
 
 function getChatResponse(message) {
     // Using Mistral API
-    const MISTRAL_API_KEY = "sAtFQbj6YlnK1TXe7H5kJdPOSfnDdIBo"; // Using same key as in backend
+    const MISTRAL_API_KEY = ""; // Using same key as in backend
     
     fetch("https://api.mistral.ai/v1/chat/completions", {
         method: "POST",
